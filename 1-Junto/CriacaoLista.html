@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Preços e Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .linha {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .linha input {
+            margin-right: 10px;
+        }
+        button {
+            margin: 10px 0;
+        }
+        #resultado {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Adicionar Produtos</h1>
+
+    <div id="lista-produtos">
+        <!-- Linhas de produtos serão adicionadas aqui -->
+    </div>
+
+    <button id="adicionar">Adicionar Linha</button>
+    <button id="gerar">Gerar Lista</button>
+
+    <div id="resultado"></div>
+
+    <button id="copiar" style="display: none;">Copiar Lista</button>
+
+    <script>
+        const listaProdutos = document.getElementById('lista-produtos');
+        const resultadoDiv = document.getElementById('resultado');
+        const copiarBtn = document.getElementById('copiar');
+
+        document.getElementById('adicionar').addEventListener('click', () => {
+            const linha = document.createElement('div');
+            linha.classList.add('linha');
+
+            const produtoInput = document.createElement('input');
+            produtoInput.type = 'text';
+            produtoInput.placeholder = 'Produto';
+
+            const precoInput = document.createElement('input');
+            precoInput.type = 'number';
+            precoInput.placeholder = 'Preço';
+            precoInput.step = '0.01';
+
+            linha.appendChild(produtoInput);
+            linha.appendChild(precoInput);
+
+            listaProdutos.appendChild(linha);
+        });
+
+        document.getElementById('gerar').addEventListener('click', () => {
+            const linhas = document.querySelectorAll('.linha');
+            let total = 0;
+            let lista = 'Lista de Produtos:\n';
+
+            linhas.forEach(linha => {
+                const produto = linha.querySelector('input[type="text"]').value;
+                const preco = parseFloat(linha.querySelector('input[type="number"]').value) || 0;
+                lista += `${produto}: R$${preco.toFixed(2)}\n`;
+                total += preco;
+            });
+
+            lista += `\nTotal: R$${total.toFixed(2)}`;
+            resultadoDiv.textContent = lista;
+
+            // Mostrar botão copiar e adicionar evento de cópia
+            copiarBtn.style.display = 'inline';
+            copiarBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(lista)
+                    .then(() => alert('Lista copiada para a área de transferência!'))
+                    .catch(err => alert('Erro ao copiar a lista.'));
+            });
+        });
+    </script>
+
+</body>
+</html>
